@@ -1,0 +1,23 @@
+jobs:
+  build:
+    docker:
+      - image: cimg/rust:1.58.0
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get -y install libclang-dev
+      - run:
+          command: rustup target add thumbv7em-none-eabihf
+          name: Install target
+      - run:
+          command: cargo build
+          name: Build debug
+      - run:
+          command: cargo build --release
+          name: Build release
+      - store_artifacts:
+          path: target/thumbv7em-none-eabihf/debug/rust-stm32-blink
+          destination: debug/rust-stm32-blink
+      - store_artifacts:
+          path: target/thumbv7em-none-eabihf/release/rust-stm32-blink
+          destination: release/rust-stm32-blink
